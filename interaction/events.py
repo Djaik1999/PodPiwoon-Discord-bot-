@@ -1,24 +1,20 @@
-from settings import bot, base
+from settings import bot, base, tree, guild
 
 
-# @bot.event
-# async def on_ready():
-#     await bot.wait_until_ready()
-#     print("Ready!")
-#
-#     # Connect to DB
-#     # Нужно сделать так чтобы передавало в другие файлы при импорте
-#     global base, cur
-#     base = sqlite3.connect('info/PodPiwoon.db')
-#     cur = base.cursor()
-#     if base:
-#         print('DataBase connected... OK')
-#
-#     # Sync tree for commands
-#     if not bot.synced:
-#         await tree.sync(guild=guild)
-#         bot.synced = True
-#     print(f"We have logged in as {bot.user} in {', '.join([str(g) for g in bot.guilds])}.")
+# Start bot
+
+
+
+@bot.event
+async def on_ready():
+    await bot.wait_until_ready()
+    print("Ready!")
+
+    # Sync tree for commands
+    if not bot.synced:
+        await tree.sync(guild=guild)
+        bot.synced = True
+    print(f"We have logged in as {bot.user} in {', '.join([str(g) for g in bot.guilds])}.")
 
 
 # Вход и выход пользователя
@@ -28,7 +24,7 @@ async def on_member_join(member):
     for ch in bot.get_guild(member.guild.id).channels:
         if ch.position == 0:
             main_channel = ch
-            # нужно сделать прерывание !!!!!!!!!!!!!!!!
+            break
 
     # for ch in :
     #     if ch.name == 'spam-bordы' or ch.name == 'основной':

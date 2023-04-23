@@ -62,9 +62,11 @@ async def self(interaction: discord.Interaction):
 
 
 @tree.command(name='facts', description='Returs fact about number (integer) or date', guild=guild)
+# @tree.describe(type="Type of fact")
+# @tree.choices(type=['math', 'date', 'year'])
 async def self(interaction: discord.Interaction,
                number: str = '1',
-               type: Optional[str] = 'trivia', # math, date, or year
+               type: Optional[str] = 'trivia' # math, date, or year
               ):
     if type == 'date':
         if not re.match(r'^\d{2}/\d{2}$', number):
@@ -79,36 +81,45 @@ async def self(interaction: discord.Interaction,
     await interaction.response.send_message(response.text)
 
 
-
-# @bot.slash_command(guild_id, name='purge', description = "Purges a channel's messages")
-# @commands.has_permissions(manage_messages = True)
-# async def purge(ctx, messages: option(int, description = "How many messages do you want to purge?", required = True)):
-#     await ctx.defer()
-#     deleted = await ctx.channel.purge(limit=messages)
-#     await ctx.respond(f"I have purged {len(deleted)}")
-
-@tree.command(name='clear', description='clear messages', guild=guild)
-async def self(interaction: discord.Interaction,
-               number_of_messages: Optional[int] = 1,
-               filter_by_user: Optional[discord.User] = None):
-    if filter_by_user:
-        def check_purge_name(message):
-            print(message.author.name, filter_by_user)
-            message.author.name == filter_by_user
-
-        deleted = await interaction.channel.purge(limit=number_of_messages + 1, check=check_purge_name)
-        author_names = set()
-        for arr in deleted:
-            author_names.add(arr.author.name)
-        print(author_names)
-    else:
-        deleted = await interaction.channel.purge(limit=number_of_messages + 1)
-        author_names = set()
-        for arr in deleted:
-            author_names.add(arr.author.name)
-        print(author_names)
-        await interaction.response.send_message(f"Cleared {numbre_of_messages} by {', '.join(author.names)}")
-    # await interaction.message.respond(f"Cleared {numer_of_messages} messages by {', '.join(author_names)}")
+# @tree.command(name='clear', description='Delete messages from a channel.', guild=guild)
+# @commands.has_permissions(administrator=True)
+# async def self(interaction: discord.Interaction,
+#                number_of_messages: int = 1,
+#                user: Optional[discord.Member] = None,
+#                bots: Optional[discord.Member] = False
+#                ):
+#
+#
+# # Didnt WORK :  invalid default parameter type given (<class 'discord.ext.commands.parameters.Parameter'>), expected (<class 'int'>, <class 'NoneType'>)
+# # async def self(interaction: discord.Interaction,
+# #                number_of_messages: int = commands.parameter(description="How much messages will be fetched for check."),
+# #                user: Optional[discord.Member] = commands.parameter(default=None, description="Delete User messages."),
+# #                bots: Optional[discord.Member] = commands.parameter(default=False, description="Deleted Bots messages.")
+# #                ):
+#
+#
+#
+#     # Discord wait 3 sec, before send error.
+#     # If command didnt respond for 3 sec, discord send error
+#     # Переписать комментарий
+#     await interaction.response.defer()
+#
+#     # Need rework, to many duplications
+#     if number_of_messages and user is None and bots == False:
+#         deleted = await interaction.channel.purge(limit=number_of_messages)
+#     else:
+#         if user and bots:
+#             filter = lambda message: message.author == user or message.author.bot
+#         elif bot:
+#             filter = lambda message: message.author.bot
+#         elif user:
+#             filter = lambda message: message.author == user
+#
+#         deleted = await interaction.channel.purge(limit=number_of_messages, check=filter)
+#
+#     author_names = {m.author.name for m in deleted}
+#     await interaction.channel.send(f"Cleared {len(deleted)} messages by {', '.join(author_names)}")
+#     # Need sleep 5 sec and delete this message (autodelete)
 
 
 
@@ -124,10 +135,9 @@ async def self(interaction: discord.Interaction,
 async def rand(ctx, a=0, b=100):
     await ctx.reply(randint(a, b))
 
-@bot.command()
-async def facts(ctx, number):
-    response
-    await ctx.reply(randint(0, 100))
+# @bot.command()
+# async def facts(ctx, number):
+#     await ctx.reply(randint(0, 100))
 
 
 @bot.command()

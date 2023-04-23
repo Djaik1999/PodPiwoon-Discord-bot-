@@ -44,54 +44,38 @@ if base:
     print('DataBase connected... OK')
 
 
-# Client (bot)
+# Bot (bot)
 bot = commands.Bot(command_prefix="-", intents=intents, activity=game)
+bot.synced = False
 tree = bot.tree
 
+
+# Client
 # bot = discord.Client(intents=intents, activity=game)
-bot.synced = False
+# bot.synced = False
+# tree = app_commands.CommandTree(bot)
 
 
 # Create and sync CommandTree
-# tree = app_commands.CommandTree(bot)
-
-@bot.event
-async def on_ready():
-    await bot.wait_until_ready()
-    print("Ready!")
-
-    # Sync tree for commands
-    if not bot.synced:
-        await tree.sync(guild=guild)
-        bot.synced = True
-    print(f"We have logged in as {bot.user} in {', '.join([str(g) for g in bot.guilds])}.")
-
-
-
-# Old Client
-# class aclient(discord.Client):
-#     def __init__(self):
-#         # activity нужно переместить из инициализации
-#         super().__init__(intents=intents, activity=game)
-#         self.synced = False
+# @bot.event
+# async def on_ready():
+#     await bot.wait_until_ready()
+#     print("Ready!")
 #
-#     async def on_ready(self):
-#         await self.wait_until_ready()
-#
-#         # Нужно либо выносить отсюда, либо переделывать логику, ибо программа не видит global
-#         # (Второй вариант предпочтительней)
-#         # Connect to DB
-#         global base, cur
-#         base = sqlite3.connect('info/PodPiwoon.db')
-#         cur = base.cursor()
-#         if base:
-#             print('DataBase connected... OK')
-#
-#         # Sync tree for commands
-#         if not self.synced:
-#             await tree.sync(guild=guild)
-#             self.synced = True
-#         print(f"We have logged in as {self.user} in {', '.join([str(g) for g in self.guilds])}.")
-# bot = aclient()
+#     # Sync tree for commands
+#     if not bot.synced:
+#         await tree.sync(guild=guild)
+#         bot.synced = True
+#     print(f"We have logged in as {bot.user} in {', '.join([str(g) for g in bot.guilds])}.")
 
-# tree = app_commands.CommandTree(bot)
+
+# Run
+async def load():
+    for file in os.listdir("./cogs"):
+        if file.endswith(".py"):
+            await bot.load_extension(f"cogs.{file[:-3]}")
+
+# async def start():
+#     await
+#     await bot.start(TOKEN)
+    # await bot.run(TOKEN, log_handler=handler, log_level=debug)
