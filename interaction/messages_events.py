@@ -2,34 +2,34 @@ from settings import bot, base, json, string
 from .custom_functions import check_word_for_event_typing
 
 
-@bot.event
-async def on_message(message):
-    await bot.process_commands(message)
-    if message[0] == bot.command_prefix:
-        return
-
-    # prevent looping bot (answer at self messages)
-    if message.author != bot.user:
-        # Проверки на определённые слова
-        if message.content.casefold().startswith('ты '):
-            m = message.content[3:]
-            await message.reply(f"Сам {m}")
-
-        # Проверка мата
-        # VER 1
-        # clean_message = {i.lower().translate(str.maketrans('', '', string.punctuation)) \
-        #                  for i in message.content.split(' ')}
-
-        # if clean_message.intersection(set(json.load(open('info/cenz.json')))) != set():
-        #     await message.channel.send(f' {message.author.mention}, ууу... кого погубам отшлёпать?? И не пиши в {message.channel} больше, от тебя говной ваняет!')
-
-        # VER 2
-        test = string.punctuation + ' '
-        clean_message = message.content.lower().translate(str.maketrans('', '', test))
-        for m in set(json.load(open('info/cenz.json'))):
-            if clean_message.find(m) != -1:
-                await message.channel.send(f' {message.author.mention}, ууу... кого погубам отшлёпать?? И не пиши в {message.channel} больше, от тебя говной ваняет!')
-                break
+# @bot.event
+# async def on_message(message):
+#     await bot.process_commands(message)
+#     if message[0] == bot.command_prefix:
+#         return
+#
+#     # prevent looping bot (answer at self messages)
+#     if message.author != bot.user:
+#         # Проверки на определённые слова
+#         if message.content.casefold().startswith('ты '):
+#             m = message.content[3:]
+#             await message.reply(f"Сам {m}")
+#
+#         # Проверка мата
+#         # VER 1
+#         # clean_message = {i.lower().translate(str.maketrans('', '', string.punctuation)) \
+#         #                  for i in message.content.split(' ')}
+#
+#         # if clean_message.intersection(set(json.load(open('info/cenz.json')))) != set():
+#         #     await message.channel.send(f' {message.author.mention}, ууу... кого погубам отшлёпать?? И не пиши в {message.channel} больше, от тебя говной ваняет!')
+#
+#         # VER 2
+#         test = string.punctuation + ' '
+#         clean_message = message.content.lower().translate(str.maketrans('', '', test))
+#         for m in set(json.load(open('info/cenz.json'))):
+#             if clean_message.find(m) != -1:
+#                 await message.channel.send(f' {message.author.mention}, ууу... кого погубам отшлёпать?? И не пиши в {message.channel} больше, от тебя говной ваняет!')
+#                 break
 
 
         # # Проверки на определённые слова

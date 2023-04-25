@@ -45,7 +45,7 @@ if base:
 
 
 # Bot (bot)
-bot = commands.Bot(command_prefix="-", intents=intents, activity=game)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("-"), intents=intents, activity=game)
 bot.synced = False
 tree = bot.tree
 
