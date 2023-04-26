@@ -15,36 +15,37 @@ class SelectRole(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         # Если добавляются роли, этой прийдется редактировать !!!!!!!!
-        guild_color = {
-            "Альянс": discord.Colour.gold(),
-            "Орда": discord.Colour.red(),
-            "Пандарен": discord.Colour.green()
+        # Пожалуй не самый лучший подход, можно переделать (как миниму название "ending_za")
+        guild_info = {
+            "Альянс": {"color": discord.Colour.gold(), "ending_za": "за Альянс"},
+            "Орда": {"color": discord.Colour.red(), "ending_za": "за Орду"},
+            "Пандарен": {"color": discord.Colour.green(), "ending_za": "Пандарен"}
         }
 
+        user_choice = self.values[0]
         user = interaction.user
         guild = interaction.guild
-        roles = interaction.guild.roles
+        guild_roles = interaction.guild.roles
         
-        for r in user.roles:
-            print(r.name)
-            # Если добавляются роли, этой прийдется редактировать !!!!!!!!
-            if r.name in ["Альянс", "Орда", "Пандарен"]:
-                print(f"Delete role {r.name}")
-                await user.remove_roles(r)
+        # Если вызвать меню по новой, то удалит старую роль (нельзя быть и за орду, и за альянс одновременно)
+        for user_role in user.roles:
+            if user_role.name in guild_info.keys:
+                print(f"Delete role {user_role.name} in {interaction.guild}")
+                await user.remove_roles(user_role)
                 break
-
-        for r in roles:
-            if r.name == self.values[0]:
-                role = r
-                print("role break")
+        
+        # Если существует на сервере - выбрать её
+        for role_in_guild in guild_roles:
+            if role_in_guild.name == user_choice:
+                role = role_in_guild
                 break
-
+        # Иначе сделать новую
         else:
-            print("role create")
-            role = await guild.create_role(name=self.values[0], colour=guild_color[self.values[0]])
+            print(f"role create in {interaction.guild}")
+            role = await guild.create_role(name=user_choice, colour=guild_info[user_choice]['color'])
 
         await user.add_roles(role)
-        await interaction.response.send_message(f"{user.mention} теперь за {role.name}")
+        await interaction.response.send_message(f"{user.mention} теперь {guild_info[user_choice]['ending_za']}")
 
 
 
