@@ -29,6 +29,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = os.getenv('PREFIX')
 GUILD_ID = os.getenv('GUILD_ID')
+APPLICATION_ID = os.getenv('APPLICATION_ID')
 
 
 # Initial variables
@@ -45,7 +46,11 @@ if base:
 
 
 # Bot (bot)
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("-"), intents=intents, activity=game)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("-"), 
+                   intents=intents, 
+                   application_id=APPLICATION_ID, 
+                   activity=game
+                   )
 bot.synced = False
 tree = bot.tree
 
@@ -54,19 +59,6 @@ tree = bot.tree
 # bot = discord.Client(intents=intents, activity=game)
 # bot.synced = False
 # tree = app_commands.CommandTree(bot)
-
-
-# Create and sync CommandTree
-# @bot.event
-# async def on_ready():
-#     await bot.wait_until_ready()
-#     print("Ready!")
-#
-#     # Sync tree for commands
-#     if not bot.synced:
-#         await tree.sync(guild=guild)
-#         bot.synced = True
-#     print(f"We have logged in as {bot.user} in {', '.join([str(g) for g in bot.guilds])}.")
 
 
 # Run

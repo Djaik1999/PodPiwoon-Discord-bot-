@@ -86,8 +86,9 @@ from .custom_functions import check_word_for_event_typing
 #     await channel.send(f"Посторонись, {user.mention} печатает... Не торопись, собирись с мыслями, никто тебя не подгоняет")
 
 
-@bot.event
-async def on_reaction_add(reaction, user):
-    print(f"{user.dm_channel} dm_channel")
-    print(f"{user} add {reaction}")
-    await user.send('content')
+# Отправляет в личные сообщения, писал для теста
+# @bot.event
+# async def on_reaction_add(reaction, user):
+#     print(f"{user.dm_channel} dm_channel")
+#     print(f"{user} add {reaction}")
+#     await user.send('content')

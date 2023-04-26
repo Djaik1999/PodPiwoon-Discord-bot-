@@ -1,3 +1,4 @@
+import discord
 from settings import bot, base, tree, guild
 
 
@@ -10,36 +11,32 @@ async def on_ready():
     await bot.wait_until_ready()
     print("Ready!")
 
-    # Sync tree for commands
-    if not bot.synced:
-        await tree.sync(guild=guild)
-        bot.synced = True
-    print(f"We have logged in as {bot.user} in {', '.join([str(g) for g in bot.guilds])}.")
+    # # Sync tree for commands
+    # if not bot.synced:
+    #     await tree.sync(guild=guild)
+    #     bot.synced = True
+    # print(f"We have logged in as {bot.user} in {', '.join([str(g) for g in bot.guilds])}.")
 
 
 # Вход и выход пользователя
 @bot.event
 async def on_member_join(member):
-    bot.get_channel
-    for ch in bot.get_guild(member.guild.id).channels:
-        if ch.position == 0:
-            main_channel = ch
-            break
-
-    # for ch in :
-    #     if ch.name == 'spam-bordы' or ch.name == 'основной':
+    main_channel = member.guild.system_channel
+    print(f"main_channel in FOR {main_channel}")
     print(f"{member} join in server!")
+
     if member.bot:
         print(f"{member} bot")
         role = discord.utils.get(member.guild.roles, name='Боты')
+        print(f"Роль - {role}, id - {role.id}")
         await member.add_roles(role)
         await main_channel.send('Хто позвал сюда другого бота???? Вы что решили меня заменить?? Побойтесь кары господней!!')
     else:
-        await bot.get_channel(ch.id).send(f"Поприветствуйте {member} на сервере, быстро!!")
-
+        await main_channel.send(f"Поприветствуйте {member} на сервере, быстро!!")
 
 @bot.event
 async def on_member_remove(member):
+    main_channel = member.guild.system_channel
     if member.bot:
         await main_channel.send(f"Туда его, етого {member}. Я тут главный!")
     else:
