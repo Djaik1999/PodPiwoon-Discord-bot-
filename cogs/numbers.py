@@ -22,6 +22,7 @@ class Numbers(commands.Cog):
                     number: str = "1",
                     type: Optional[str] = "trivia"
                     ):
+        """Submit facts about numbers or dates, using 'numbersapi.com' API"""
         if type == "date":
             if not re.match(r"^\d{2}/\d{2}$", number):
                 await interaction.response.send_message(f"Строка для type='date', должна иметь вид месяц/день (пример: 09/11 - 11 сентября)")
@@ -32,7 +33,6 @@ class Numbers(commands.Cog):
         elif not number.isnumeric():
             await interaction.response.send_message("number - должен быть целым числом")
         else:
-            print('Facts в конце')
             response = requests.get(f"http://numbersapi.com/{number}/{type}")
             embed = discord.Embed(description=response.text)
             await interaction.response.send_message(embed=embed)

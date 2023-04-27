@@ -1,12 +1,6 @@
 from settings import *
 
 
-# @tree.command(name='offline', description="Stop bot", guild=guild)
-# async def self(interaction):
-#     await interaction.response.send_message("Понял, зря быканул")
-#     await bot.close()
-
-
 @tree.command(name="roll", description="return random num in range(a, b)", guild=guild)
 async def roll(interaction: discord.Interaction, a: int, b: int):
     await interaction.response.send_message(randint(a, b))
@@ -38,26 +32,6 @@ async def embed(interaction: discord.Interaction):
         description=f"{interaction.user.mention}"
     )
     await interaction.response.send_message(embed=mbed)
-
-
-# @tree.command(name='facts', description='Returs fact about number (integer) or date', guild=guild)
-# # @tree.describe(type="Type of fact")
-# # @tree.choices(type=['math', 'date', 'year'])
-# async def self(interaction: discord.Interaction,
-#                number: str = '1',
-#                type: Optional[str] = 'trivia' # math, date, or year
-#               ):
-#     if type == 'date':
-#         if not re.match(r'^\d{2}/\d{2}$', number):
-#             await interaction.response.send_message(f"Строка для type='date', должна иметь вид месяц/день (пример: 09/11 - 11 сентября)")
-#         else:
-#             response = requests.get(f"http://numbersapi.com/{number}/{type}")
-#             await interaction.response.send_message(response.text)
-#     elif not number.isnumeric():
-#         await interaction.response.send_message("number - должен быть целым числом")
-#
-#     response = requests.get(f"http://numbersapi.com/{number}/{type}")
-#     await interaction.response.send_message(response.text)
 
 
 @tree.command(name='clear', description='Delete messages from a channel.', guild=guild)
@@ -108,10 +82,6 @@ async def clear(interaction: discord.Interaction,
 async def rand(ctx, a=0, b=100):
     await ctx.reply(randint(a, b))
 
-# @bot.command()
-# async def sync(ctx):
-#     fmt = await ctx.bot.tree.sync(guild=ctx.guild)
-#     await ctx.send(f"Synced {len(fmt)} commands.")
 
 # @bot.command()
 # async def kick(ctx, user: discord.User(), *args, reason='Причина не указана', **kwargs):

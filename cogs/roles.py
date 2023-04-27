@@ -65,7 +65,28 @@ class Roles(commands.Cog):
 
     @commands.command()
     async def role_menu(self, ctx):
+        """A menu appears where the Member can choose a role for themselves"""
         await ctx.send("Pick a role", view=SelectRoleView(), delete_after=20)
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def apply_bot_roles(self, ctx, name_role):
+        """Creates or applies an existing role to Members-bots on the server"""
+        role = discord.utils.get(ctx.guild.roles, name=name_role)
+        if role:
+            role_status = f"Role already exists: {role}"
+        else:
+            role = await ctx.guild.create_role(name=name_role)
+            role_status = f"Created a new role: {role}"
+
+        # Считывает всех пользователей из гильдии и если он бот и еще не имеет соответствующей роли, то получает её
+        who_have_new_role = list()
+        for member in ctx.guild.members:
+            if member.bot and role not in member.roles:
+                await member.add_roles(role)
+                who_have_new_role.append(member.name)
+
+        await ctx.message.reply(f"{role_status}; Role applied in members: {', '.join(who_have_new_role)}")
 
 
 async def setup(bot):

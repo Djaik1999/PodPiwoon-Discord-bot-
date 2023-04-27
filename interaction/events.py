@@ -22,15 +22,14 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     main_channel = member.guild.system_channel
-    print(f"main_channel in FOR {main_channel}")
-    print(f"{member} join in server!")
 
     if member.bot:
-        print(f"{member} bot")
+        # Роль только для моего сервера, если импортировать на другие, необходимо реализовать создание бот-роли (мб через команду)
         role = discord.utils.get(member.guild.roles, name='Боты')
-        print(f"Роль - {role}, id - {role.id}")
-        await member.add_roles(role)
         await main_channel.send('Хто позвал сюда другого бота???? Вы что решили меня заменить?? Побойтесь кары господней!!')
+        # Не срабатывает (Не хватает прав, хотя администратор) !!!!!!!!!!!!!
+        # Починил: В Discord нельзя присваивать роль которая находится в списке ролей выше твоей
+        await member.add_roles(role)
     else:
         await main_channel.send(f"Поприветствуйте {member} на сервере, быстро!!")
 
@@ -38,9 +37,9 @@ async def on_member_join(member):
 async def on_member_remove(member):
     main_channel = member.guild.system_channel
     if member.bot:
-        await main_channel.send(f"Туда его, етого {member}. Я тут главный!")
+        await main_channel.send(f"Туда его, етого {member.name}. Я тут главный!")
     else:
-        await main_channel.send(f"У меня печальные новости, нас покинул {member}. Мы тебя не забудем.")
+        await main_channel.send(f"У меня печальные новости, нас покинул {member.name}. Мы тебя не забудем.")
 
 
 # Голосовые события
@@ -84,5 +83,7 @@ async def on_guild_join(guild):
                      )
         base.commit()
         print(f' {member.name} - выполнился')
+
+    await guild.system_channel.send("Бенг, бенг, бенг, батя в здании!!")
 
 
