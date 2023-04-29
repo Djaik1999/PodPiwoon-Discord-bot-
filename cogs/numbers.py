@@ -17,6 +17,8 @@ class Numbers(commands.Cog):
         print('Numbers cog loaded')
 
     @app_commands.command(name="facts", description="Returs fact about number (integer) or date")
+    @app_commands.describe(number="int if you not chose type=date, else use format 09/11 - 11 september",
+                           type="type is one of trivia, math, date, or year")
     async def facts(self, 
                     interaction: discord.Interaction,
                     number: str = "1",

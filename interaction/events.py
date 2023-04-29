@@ -4,8 +4,6 @@ from settings import bot, base, tree, guild
 
 # Start bot
 
-
-
 @bot.event
 async def on_ready():
     await bot.wait_until_ready()
@@ -45,12 +43,12 @@ async def on_member_remove(member):
 # Голосовые события
 @bot.event
 async def on_voice_server_update(data, /):
-    await print(data)
+    print(data)
 
 
 @bot.event
 async def on_voice_state_update(data, /):
-    await print(data)
+    print(data)
 
 
 # Подключение бота к серверу, первоначальная настройка
@@ -63,24 +61,24 @@ async def on_guild_join(guild):
     base.commit()
     print('выполнился guilds')
 
-    for ch in guild.channels:
+    for channel in guild.channels:
         # явно передаю null для автогенерации id, иначе выдаёт error (требует передачи 3 аргументов)
         # base.execute("INSERT OR IGNORE INTO channels VALUES(null, ?, ?)", (str(ch.name), guild.id))
 
         # Предотвращает создание записей типа: Голосовые каналы, Текстовые каналы - т.к. у них category None
-        if ch.category:
-            id = f"{guild.id}_{ch.name}_{guild.created_at}"
+        if channel.category:
+            id = f"{guild.id}_{channel.name}_{guild.created_at}"
             base.execute("INSERT OR IGNORE INTO channels VALUES(?, ?, ?, ?)",
-                         (id, ch.name, str(ch.category), guild.id)
+                         (id, channel.name, str(channel.category), guild.id)
                          )
             base.commit()
-            print(f"Category: {ch.category}, Name: {ch.name} - выполнился channels")
+            print(f"Category: {channel.category}, Name: {channel.name} - выполнился channels")
 
     for member in guild.members:
         # 0 четвёртым аргументом - это default значение для новой записи (можно переделать?)
         base.execute("INSERT OR IGNORE INTO members VALUES(?, ?, ?, ?, ?) ", \
             (member.id, str(member.name), str(member.nick), 0, member.guild.id)
-                     )
+                    )
         base.commit()
         print(f' {member.name} - выполнился')
 

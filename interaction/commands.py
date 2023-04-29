@@ -36,18 +36,14 @@ async def embed(interaction: discord.Interaction):
 
 @tree.command(name='clear', description='Delete messages from a channel.', guild=guild)
 @commands.has_permissions(administrator=True)
+@app_commands.describe(number_of_messages="how much messages was filtred",
+                       user="delete messages from a specific user",
+                       bots="delete messages from bots")
 async def clear(interaction: discord.Interaction,
                number_of_messages: int = 1,
                user: Optional[discord.Member] = None,
                bots: Optional[bool] = False
                ):
-
-# Didnt WORK :  invalid default parameter type given (<class 'discord.ext.commands.parameters.Parameter'>), expected (<class 'int'>, <class 'NoneType'>)
-# async def self(interaction: discord.Interaction,
-#                number_of_messages: int = commands.parameter(description="How much messages will be fetched for check."),
-#                user: Optional[discord.Member] = commands.parameter(default=None, description="Delete User messages."),
-#                bots: Optional[discord.Member] = commands.parameter(default=False, description="Deleted Bots messages.")
-#                ):
 
     # Discord wait 3 sec, before send error.
     # If command didnt respond for 3 sec, discord send error
