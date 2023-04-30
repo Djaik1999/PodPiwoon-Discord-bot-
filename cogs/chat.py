@@ -19,8 +19,6 @@ class Chat(commands.Cog):
 
 
     # Commands
-    # @app_commands.command(name="::", description="send emoji by name")
-    # async def get_one_emoji(self, interaction)
 
     @app_commands.command(name="get_all_emojis", description="submit emojis from current server")
     @app_commands.describe(oneline="Send all emoji in one message or create a message for each emoji?",
@@ -31,17 +29,20 @@ class Chat(commands.Cog):
                             ):
         
         await interaction.response.defer()
+        await interaction.channel.typing()
 
         # Много ветвлений, но они убирают дупликацию кода
         if oneline:
             emoji_list = list()
+            animated_arg = 'a' if animated else ''
             for emoji in interaction.guild.emojis:
                 if animated and emoji.animated:
                     emoji_list.append(emoji)
                 elif animated == False and emoji.animated == False:
                     emoji_list.append(emoji)
 
-            await interaction.channel.send(" ".join(map(lambda em: f"<{'a' if animated else ''}:{em.name}:{em.id}>", emoji_list)))
+
+            await interaction.channel.send(" ".join(map(lambda em: f"<{animated_arg}:{em.name}:{em.id}>", emoji_list)))
 
         else:
             await interaction.channel.send("Да начнется спам")
@@ -60,10 +61,17 @@ class Chat(commands.Cog):
     async def get_emoji(self, message):
         """Отпраляет emoji; принимает имя; позволяет обойти Nitro (боты почему-то могут отправлять платные стикеры)"""
         if message.content.casefold().startswith("::"):
-            clear_message = message.content.strip(': ')
+            await message.channel.typing()
+
+            clear_message = message.content.split(' ')[0].strip(': ')
+            
             for emoji in message.channel.guild.emojis:
                 if clear_message == emoji.name:
-                    await message.channel.send(content=f"<{'a' if emoji.animated else ''}:{emoji.name}:{emoji.id}>")
+
+                    id = f" id = {emoji.id}" if message.content.casefold().endswith('id') else '' # Aded for developing
+                    animated_arg = 'a' if emoji.animated else ''
+
+                    await message.channel.send(content=f"<{animated_arg}:{emoji.name}:{emoji.id}>{id}")
                     break
             else:
                 await message.channel.send(content="I'm didn't find the emoji")

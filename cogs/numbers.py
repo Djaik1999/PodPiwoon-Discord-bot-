@@ -16,26 +16,33 @@ class Numbers(commands.Cog):
     async def on_ready(self):
         print('Numbers cog loaded')
 
-    @app_commands.command(name="facts", description="Returs fact about number (integer) or date")
-    @app_commands.describe(number="int if you not chose type=date, else use format 09/11 - 11 september",
-                           type="type is one of trivia, math, date, or year")
-    async def facts(self, 
+    @app_commands.command(name="facts", description="Returns facts about numbers or dates")
+    @app_commands.describe(number="09/11 (date format 11 september) if want get fact about date, else integer",
+                           type_fact="What type of fact you want")
+    @app_commands.choices(type_fact=[
+        discord.app_commands.Choice(name="Trivial fact", value="trivia"),
+        discord.app_commands.Choice(name="Math fact", value="math"),
+        discord.app_commands.Choice(name="Fact about Year", value="year"),
+        discord.app_commands.Choice(name="Fact about Date", value="date"),
+    ])
+    async def facts(self,
                     interaction: discord.Interaction,
                     number: str = "1",
-                    type: Optional[str] = "trivia"
+                    type_fact: Optional[discord.app_commands.Choice[str]] = "trivia"
                     ):
         """Submit facts about numbers or dates, using 'numbersapi.com' API"""
-        if type == "date":
+        if type_fact.value == "date":
             if not re.match(r"^\d{2}/\d{2}$", number):
-                await interaction.response.send_message(f"Строка для type='date', должна иметь вид месяц/день (пример: 09/11 - 11 сентября)")
+                await interaction.response.send_message(
+                    f"Строка для type_fact='date', должна иметь вид месяц/день (пример: 09/11 - 11 сентября)")
             else:
-                response = requests.get(f"http://numbersapi.com/{number}/{type}")
+                response = requests.get(f"http://numbersapi.com/{number}/{type_fact.value}")
                 embed = discord.Embed(description=response.text)
                 await interaction.response.send_message(embed=embed)
         elif not number.isnumeric():
             await interaction.response.send_message("number - должен быть целым числом")
         else:
-            response = requests.get(f"http://numbersapi.com/{number}/{type}")
+            response = requests.get(f"http://numbersapi.com/{number}/{type_fact.value}")
             embed = discord.Embed(description=response.text)
             await interaction.response.send_message(embed=embed)
 
