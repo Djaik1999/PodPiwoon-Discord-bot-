@@ -115,8 +115,8 @@ class AsciiArt(commands.Cog):
 
         # Sends images in channel
         if only_one:
-            rand_num = random.choice(images)
-            await interaction.channel.send(rand_num.text)
+            random_image = random.choice(images)
+            await interaction.channel.send(random_image.text)
         else:
             for image in images:
                 await interaction.channel.send(image.text)
