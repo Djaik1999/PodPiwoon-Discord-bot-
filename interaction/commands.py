@@ -52,7 +52,7 @@ async def clear(interaction: discord.Interaction,
 
     # Need rework, to many duplications
     if number_of_messages and user is None and bots is False:
-        deleted = await interaction.channel.purge(limit=number_of_messages)
+        deleted = await interaction.channel.purge(limit=number_of_messages + 1)
     else:
         if user and bots:
             filter = lambda message: message.author == user or message.author.bot
@@ -61,10 +61,10 @@ async def clear(interaction: discord.Interaction,
         elif user:
             filter = lambda message: message.author == user
 
-        deleted = await interaction.channel.purge(limit=number_of_messages, check=filter)
+        deleted = await interaction.channel.purge(limit=number_of_messages + 1, check=filter)
 
     author_names = {m.author.name for m in deleted}
-    await interaction.response.send_message(f"Cleared {len(deleted)} messages by {', '.join(author_names)}")
+    await interaction.channel.send(f"Cleared {len(deleted)} messages by {', '.join(author_names)}")
 
 
 

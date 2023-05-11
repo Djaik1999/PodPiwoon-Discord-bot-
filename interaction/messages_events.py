@@ -17,9 +17,9 @@ async def on_message(message):
     # if message[0] == bot.command_prefix:
     #     return
 
-#     if message.content.casefold().startswith('ты '):
-#         m = message.content[3:]
-#         await message.reply(f"Сам {m}")
+    if message.content.casefold().startswith('ты '):
+        m = message.content[3:]
+        await message.reply(f"Сам {m}")
 
 
 #     if message.content == 'test':

@@ -30,6 +30,7 @@ class Chat(commands.Cog):
         
         await interaction.response.defer()
         await interaction.channel.typing()
+        counter = 0
 
         # Много ветвлений, но они убирают дупликацию кода
         if oneline:
@@ -37,8 +38,10 @@ class Chat(commands.Cog):
             animated_arg = 'a' if animated else ''
             for emoji in interaction.guild.emojis:
                 if animated and emoji.animated:
+                    counter += 1
                     emoji_list.append(emoji)
                 elif animated == False and emoji.animated == False:
+                    counter += 1
                     emoji_list.append(emoji)
 
 
@@ -48,18 +51,23 @@ class Chat(commands.Cog):
             await interaction.channel.send("Да начнется спам")
             for emoji in interaction.guild.emojis:
                 if animated and emoji.animated:
+                    counter += 1
                     await interaction.channel.send(f"<a:{emoji.name}:{emoji.id}>")
                 elif animated == False and emoji.animated == False:
+                    counter += 1
                     await interaction.channel.send(f"<:{emoji.name}:{emoji.id}>")
+
+        await interaction.followup.send(f"Sends {counter} emojis")
 
 
     # Events
-    # Не срабатывают, понимаю почему
-    # UPD: уже срабатывает
 
     @commands.Cog.listener("on_message")
     async def get_emoji(self, message):
         """Отпраляет emoji; принимает имя; позволяет обойти Nitro (боты почему-то могут отправлять платные стикеры)"""
+        if message.author == bot.user:
+            return
+
         if message.content.casefold().startswith("::"):
             await message.channel.typing()
 
@@ -83,6 +91,9 @@ class Chat(commands.Cog):
     async def alias_message(self, message):
         """Пиши слово из списка в чат и получай ответ"""
 
+        if message.author == bot.user:
+            return
+        
         # Словарь с командными словами (Alias)
         approwed_words = {
             'задержка': bot.latency,
@@ -91,19 +102,26 @@ class Chat(commands.Cog):
             'голосовые': bot.voice_clients,
             'users': bot.users,
             'ясно': 'хуясно, черт',
-            'check_for_pi': {
-                ('число пи', 'пи', 'pi', 'число p', 'число п', 'число pi'): pi
-                }
+            'check_for_pi': ('число пи', 'пи', 'pi', 'число p', 'число п', 'число pi')
             }   # Извиняюсь за мат перед теми кто читает, но писал бота для своего сервера
 
+        break_flag = False
         for approwed_word in approwed_words.keys():
+            if break_flag:
+                break
             if approwed_word == 'check_for_pi':
-                for inner_word in approwed_word:
+                for inner_word in approwed_words['check_for_pi']:
                     if message.content.casefold() == inner_word:
-                        await message.reply(approwed_words[approwed_word])
+                        break_flag = True
+                        await message.reply(pi)
             
             elif message.content.casefold() == approwed_word:
+                break_flag = True
                 await message.reply(approwed_words[approwed_word])
+
+            # print(f"{approwed_word}")
+
+        # !!! ПРОИСХОДИТ УТЕЧКА ВРЕМЕНИ КУДА-ТО НУЖНО ТЕТСИТЬ (или у меня затупил инет)
 
     
     @commands.Cog.listener("on_message")
@@ -111,6 +129,7 @@ class Chat(commands.Cog):
         """Проверка мата"""
 
         # Нужно вынести в основной on_message
+        # Видимо listener срабатывает раньше исполнения кода в on_message()
         if message.author == bot.user:
             return
 
@@ -128,7 +147,6 @@ class Chat(commands.Cog):
 
         # if clean_message.intersection(set(json.load(open('info/cenz.json')))) != set():
         #     await message.channel.send(f' {message.author.mention}, ууу... кого погубам отшлёпать??')
-
 
 
 
